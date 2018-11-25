@@ -28,10 +28,9 @@ baltimore_data =
 baltimore_data
 fit_logistic = 
   baltimore_data %>% 
-  glm(solved ~ victim_age + victim_race, data = ., family = binomial()) 
+  glm(solved ~ victim_age + victim_race + victim_sex, data = ., family = binomial()) 
 fit_logistic %>% 
   broom::tidy() %>% 
-  mutate(OR = exp(estimate)) %>%
-  select(term, log_OR = estimate, OR, p.value) %>% 
-  knitr::kable(digits = 3)
+  mutate(OR = boot::inv.logit(estimate)) %>%
+    knitr::kable(digits = 3)
 ```
