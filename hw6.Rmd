@@ -10,9 +10,15 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(janitor)
 library(dplyr, purrr, ggplot)
-hom_data <- read.csv(p8105.com/data/homicide-data.csv)
+hom_data <- read.csv(url("https://raw.githubusercontent.com/washingtonpost/data-homicides/master/homicide-data.csv"))
 hom_data = 
   hom_data %>%
-  mutate(city_state = str_c(city, ",", state))
+  mutate(city_state = str_c(city, ",", state)) %>%
+  filter(city_state != "Dallas, TX", "Phoenix, AZ", "Kansas City, MO", "Tulsa, AL") %>% 
+  mutate(resolved = as.numeric(disposition == "Closed by arrest"),
+         victim_age = as.numeric(victim_age),
+         victim_race = fct_relevel(victim_race, "White")) %>% 
+  select(resolved, victim_age, victim_race, victim_sex)
+## Omit cities Dallas, TX; Phoenix, AZ; and Kansas City, MO – these don’t report victim race. Also omit Tulsa, AL – this is a data entry 
 hom_data$city_state
 ```
