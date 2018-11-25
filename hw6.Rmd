@@ -14,7 +14,7 @@ hom_data <- read.csv(url("https://raw.githubusercontent.com/washingtonpost/data-
 hom_data = 
   hom_data %>%
   mutate(city_state = str_c(city, ",", state)) %>%
-  filter(city_state != "Dallas, TX", "Phoenix, AZ", "Kansas City, MO", "Tulsa, AL") %>% 
+  filter(city_state != "Dallas, TX", city_state != "Phoenix, AZ", city_state != "Kansas City, MO", city_state != "Tulsa, AL") %>% 
   mutate(resolved = as.numeric(disposition == "Closed by arrest"),
          victim_age = as.numeric(victim_age),
          victim_race = fct_relevel(victim_race, "White")) %>% 
