@@ -5,32 +5,42 @@ date: "November 25, 2018"
 output: github_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(janitor)
-library(dplyr, purrr, ggplot)
-hom_data <- read.csv(url("https://raw.githubusercontent.com/washingtonpost/data-homicides/master/homicide-data.csv"))
+library(dplyr)
+library(purrr)
+hom_data <- read.csv(file = "./homicide-data.csv")
 hom_data = 
   hom_data %>%
   mutate(city_state = str_c(city, ",", state)) %>%
   filter(city_state != "Dallas, TX", city_state != "Phoenix, AZ", city_state != "Kansas City, MO", city_state != "Tulsa, AL") %>% 
-  mutate(victim_race = recode(victim_race, 'White' = "White", 'Hispanic' = "Non_white", 'Other' = "Non_white", 'Black' = "Non_white", 'Asian' = "Non_white", 'Unknown' = "Non_white")) %>% 
+    mutate(victim_race = recode(victim_race, 'White' = "White", 'Hispanic' = "Non_white", 'Other' = "Non_white", 'Black' = "Non_white", 'Asian' = "Non_white", 'Unknown' = "Non_white")) %>% 
   mutate(solved = as.numeric(disposition == "Closed by arrest"),
          victim_age = as.numeric(victim_age),
          victim_race = fct_relevel(victim_race, "White", "Non_white")) %>% 
-  mutate(victim_age = as.numeric(victim_age)) %>%
-  group_by(city_state)
-## For the city of Baltimore, MD, use the glm function to fit a logistic regression with resolved vs unresolved as the outcome and victim age, sex and race (as just defined) as predictors.
+  mutate(victim_age = as.numeric(victim_age)) 
 baltimore_data = 
   hom_data %>%
   filter(city_state == "Baltimore,MD")
-baltimore_data
-fit_logistic = 
+baltimore_fit = 
   baltimore_data %>% 
-  glm(solved ~ victim_age + victim_race + victim_sex, data = ., family = binomial()) 
-fit_logistic %>% 
+  glm(solved ~ victim_age + victim_race + victim_sex, data = ., family = binomial()) %>% 
   broom::tidy() %>% 
   mutate(OR = boot::inv.logit(estimate)) %>%
-    knitr::kable(digits = 3)
+  select(term, log_OR = estimate, OR, p.value) %>% 
+  knitr::kable(digits = 3)
+cities_glinmodel = 
+  hom_data %>% 
+  select(city_state, solved, victim_age, victim_race, victim_sex) %>%
+  filter(victim_sex != "Unknown") %>%
+  nest() %>% 
+  mutate(glinmodel = map(data, ~glm(solved ~ victim_age + victim_race + victim_sex, data = ., family = binomial()))) %>%
+  mutate(glinmodel_tidy = map(glinmodel, ~broom::tidy(.))) %>%
+  mutate(glinmodel_ci = map(glinmodel, ~broom::confint_tidy(.))) %>%
+  select(city_state, glinmodel_tidy, glinmodel_ci) %>% 
+  unnest() %>% 
+  mutate(OR = exp(estimate), OR.conf.low = exp(conf.low), OR.conf.high = exp(conf.high)) %>% 
+  select(city_state, term, log_OR = estimate, OR, p.value) 
 ```
