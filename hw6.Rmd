@@ -11,12 +11,13 @@ library(tidyverse)
 library(janitor)
 library(dplyr)
 library(purrr)
-hom_data <- read.csv(file = "./homicide-data.csv")
-hom_data = 
-  hom_data %>%
+hom_data <- read.csv(file = "./homicide-data.csv") %>%
   mutate(city_state = str_c(city, ",", state)) %>%
   filter(city_state != "Dallas, TX", city_state != "Phoenix, AZ", city_state != "Kansas City, MO", city_state != "Tulsa, AL") %>% 
-    mutate(victim_race = recode(victim_race, 'White' = "White", 'Hispanic' = "Non_white", 'Other' = "Non_white", 'Black' = "Non_white", 'Asian' = "Non_white", 'Unknown' = "Non_white")) %>% 
+  filter(victim_sex != "Unknown") %>%
+  select(-victim_last, -victim_first, -disposition, -victim_race) %>%
+  mutate(victim_sex = as.factor(victim_sex)) %>%
+  mutate(victim_race = recode(victim_race, 'White' = "White", 'Hispanic' = "Non_white", 'Other' = "Non_white", 'Black' = "Non_white", 'Asian' = "Non_white", 'Unknown' = "Non_white")) %>% 
   mutate(solved = as.numeric(disposition == "Closed by arrest"),
          victim_age = as.numeric(victim_age),
          victim_race = fct_relevel(victim_race, "White", "Non_white")) %>% 
@@ -33,8 +34,8 @@ baltimore_fit =
   knitr::kable(digits = 3)
 cities_glinmodel = 
   hom_data %>% 
+  group_by(city_state) %>%
   select(city_state, solved, victim_age, victim_race, victim_sex) %>%
-  filter(victim_sex != "Unknown") %>%
   nest() %>% 
   mutate(glinmodel = map(data, ~glm(solved ~ victim_age + victim_race + victim_sex, data = ., family = binomial()))) %>%
   mutate(glinmodel_tidy = map(glinmodel, ~broom::tidy(.))) %>%
