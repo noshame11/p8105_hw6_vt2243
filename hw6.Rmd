@@ -57,3 +57,10 @@ cities_plot =
   theme(axis.text.x = element_text(angle = 90))
 cities_plot
 ```
+### Problem 2
+```{r}
+birthweight = read.csv(file = "./birthweight.csv")
+colnames(birthweight)
+col(birthweight)
+```
+
