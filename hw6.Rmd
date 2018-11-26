@@ -44,4 +44,16 @@ cities_glinmodel =
   unnest() %>% 
   mutate(OR = exp(estimate), OR.conf.low = exp(conf.low), OR.conf.high = exp(conf.high)) %>% 
   select(city_state, term, log_OR = estimate, OR, p.value) 
+cities_plot =
+  cities_glinmodel %>% 
+  ggplot(aes(fct_reorder(city_state, OR), OR)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = OR.conf.low, ymax = OR.conf.high)) +
+  labs(
+    title = "Estimates and CIs for All Cities",
+    x = "City",
+    y = "Estimates"
+  )  +
+  theme(axis.text.x = element_text(angle = 90))
+cities_plot
 ```
