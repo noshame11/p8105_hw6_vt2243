@@ -10,7 +10,7 @@ library(tidyverse)
 library(janitor)
 library(dplyr)
 library(purrr)
-hom_data <- read.csv(file = "./homicide-data.csv") %>%
+hom_data <- read.csv(file = "./homicide-data.csv") 
 hom_data = 
   hom_data %>%
   mutate(city_state = str_c(city, ",", state)) %>%
@@ -42,13 +42,13 @@ cities_glinmodel =
   mutate(glinmodel_ci = map(glinmodel, ~broom::confint_tidy(.))) %>%
   select(city_state, glinmodel_tidy, glinmodel_ci) %>% 
   unnest() %>% 
-  mutate(OR = exp(estimate), OR.conf.low = exp(conf.low), OR.conf.high = exp(conf.high)) %>% 
-  select(city_state, term, log_OR = estimate, OR, p.value) 
+  mutate(OR = exp(estimate)) %>%
+  mutate(conf.low = exp(estimate - (1.96 * std.error)), conf.high = exp(estimate + (1.96 * std.error))) 
 cities_plot =
   cities_glinmodel %>% 
   ggplot(aes(fct_reorder(city_state, OR), OR)) +
   geom_point() +
-  geom_errorbar(aes(ymin = OR.conf.low, ymax = OR.conf.high)) +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
   labs(
     title = "Estimates and CIs for All Cities",
     x = "City",
