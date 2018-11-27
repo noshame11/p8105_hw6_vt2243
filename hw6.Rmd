@@ -79,7 +79,7 @@ birthweight_data =
   mutate(babysex = as.factor(babysex), frace = as.factor(frace), malform = as.factor(malform), 
          mrace = as.factor(mrace))
 ```
-```{r, maternal factors of bmi and weight, warning = FALSE, echo = FALSE}
+```{r, maternal factors bmi and wt, warning = FALSE, echo = FALSE, warning = FALSE, error = FALSE}
 mod_maternalfactors = 
   birthweight_data %>%
   select(bwt, ppbmi, ppwt)
@@ -87,9 +87,11 @@ lm_maternalfactors = lm(bwt ~ ppbmi + ppwt, mod_maternalfactors)
 lm_maternalfactors %>% 
   broom::tidy() %>% 
   select(term, estimate, p.value) %>% 
-  knitr::kable(digits = 3) 
-modelr::add_residuals(mod_maternalfactors, lm_maternalfactors) 
-modelr::add_predictions(mod_maternalfactors, lm_maternalfactors)
+  knitr::kable(digits = 3)
+mod_maternalfactors %>%
+  head() %>%
+  modelr::add_residuals(lm_maternalfactors) %>%
+  modelr::add_predictions(lm_maternalfactors)
 mod_maternalfactors %>% 
   modelr::add_residuals(lm_maternalfactors) %>% 
   ggplot(aes(x = ppbmi + ppwt, y = resid)) + geom_violin()
@@ -107,8 +109,10 @@ lm_birthleng_gestweek %>%
   broom::tidy() %>% 
   select(term, estimate, p.value) %>% 
   knitr::kable(digits = 3)
-modelr::add_residuals(mod_birthleng_gestweek, lm_birthleng_gestweek)
-modelr::add_predictions(mod_birthleng_gestweek, lm_birthleng_gestweek)
+mod_birthleng_gestweek %>%
+  head() %>%
+  modelr::add_residuals(lm_birthleng_gestweek) %>%
+  modelr::add_predictions(lm_birthleng_gestweek)
 ```
 ```{r head circum length and sex, warning = FALSE, echo = FALSE}
 mod_headlengthsex = 
@@ -119,8 +123,10 @@ lm_headlengthsex %>%
   broom::tidy() %>% 
   select(term, estimate, p.value) %>% 
   knitr::kable(digits = 3)
-modelr::add_residuals(mod_headlengthsex, lm_headlengthsex) 
-modelr::add_predictions(mod_headlengthsex, lm_headlengthsex)
+mod_headlengthsex %>%
+  head() %>%
+  modelr::add_residuals(lm_headlengthsex) %>%
+  modelr::add_predictions(lm_headlengthsex)
 ```
 ```{r crossvalidation of models, warning = FALSE, echo = FALSE}
 crossvalidate_birthdata = 
