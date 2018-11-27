@@ -119,7 +119,7 @@ lm_headlengthsex %>%
   broom::tidy() %>% 
   select(term, estimate, p.value) %>% 
   knitr::kable(digits = 3)
-modelr::add_residuals(mod_headlengthsex, lm_headlengthsex)
+modelr::add_residuals(mod_headlengthsex, lm_headlengthsex) 
 modelr::add_predictions(mod_headlengthsex, lm_headlengthsex)
 ```
 ```{r crossvalidation of models, warning = FALSE, echo = FALSE}
