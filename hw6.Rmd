@@ -85,8 +85,16 @@ birthweight_data %>%
   ggplot(aes(x = pred, y = resid)) + geom_point()
 ## One using length at birth and gestational age as predictors (main effects only)
 ## One using head circumference, length, sex, and all interactions (including the three-way interaction) between these
-
-
+mod_birthleng_gestweek = 
+  birthweight_data %>%
+  select(bwt, blength, gaweeks)
+lm_birthleng_gestweek = lm(bwt ~ blength + gaweeks, mod_birthleng_gestweek)
+lm_birthleng_gestweek %>% 
+  broom::tidy() %>% 
+  select(term, estimate, p.value) %>% 
+  knitr::kable(digits = 3)
+modelr::add_residuals(mod_birthleng_gestweek, lm_birthleng_gestweek)
+modelr::add_predictions(mod_birthleng_gestweek, lm_birthleng_gestweek)
 
 ```
 
