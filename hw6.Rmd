@@ -61,6 +61,9 @@ cities_plot
 ```
 ### Problem 2
 ```{r}
+library(modelr) 
+library(mgcv)
+set.seed(12345)
 birthweight = read.csv(file = "./birthweight.csv")
 birthweight_data = 
   birthweight %>%
@@ -95,6 +98,17 @@ lm_birthleng_gestweek %>%
   knitr::kable(digits = 3)
 modelr::add_residuals(mod_birthleng_gestweek, lm_birthleng_gestweek)
 modelr::add_predictions(mod_birthleng_gestweek, lm_birthleng_gestweek)
-
+mod_headlengthsex = 
+  birthweight_data %>%
+  select(bwt, bhead, blength, babysex)
+lm_headlengthsex = lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead*babysex + blength*babysex + bhead*blength*babysex, mod_headlengthsex)
+lm_headlengthsex %>% 
+  broom::tidy() %>% 
+  select(term, estimate, p.value) %>% 
+  knitr::kable(digits = 3)
+modelr::add_residuals(mod_headlengthsex, lm_headlengthsex)
+modelr::add_predictions(mod_headlengthsex, lm_headlengthsex)
+crossvalidate_birthdata = 
+  crossv_mc(birthweight_data, 500) 
 ```
 
