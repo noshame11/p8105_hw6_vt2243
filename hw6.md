@@ -26262,4 +26262,12 @@ modelr::add_predictions(mod_headlengthsex, lm_headlengthsex)
 ``` r
 crossvalidate_birthdata = 
   crossv_mc(birthweight_data, 500) 
+crossvalidate_birthdata = 
+  crossvalidate_birthdata %>% 
+  mutate(mod_maternalfactors = map(train, ~lm(bwt ~ ppbmi + ppwt, data = .x)),
+         mod_birthleng_gestweek = map(train, ~lm(bwt ~ blength + gaweeks, data = .x)),
+         mod_headlengthsex = map(train, ~lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead*babysex + blength*babysex + bhead*blength*babysex, data = .x))) %>% 
+  mutate(rmse_maternalfactors = map2_dbl(mod_maternalfactors, test, ~rmse(model = .x, data = .y)),
+         rmse_birthleng_gestweek = map2_dbl(mod_birthleng_gestweek, test, ~rmse(model = .x, data = .y)),
+         rmse_headlengthsex = map2_dbl(mod_headlengthsex, test, ~rmse(model = .x, data = .y)))
 ```
