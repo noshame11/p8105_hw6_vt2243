@@ -8799,6 +8799,15 @@ mod_maternalfactors %>%
 ![](hw6_files/figure-markdown_github/unnamed-chunk-1-1.png)
 
 ``` r
+birthweight_data %>%
+  modelr::add_predictions(lm_maternalfactors) %>%
+  modelr::add_residuals(lm_maternalfactors) %>%
+  ggplot(aes(x = pred, y = resid)) + geom_point()
+```
+
+![](hw6_files/figure-markdown_github/unnamed-chunk-1-2.png)
+
+``` r
 ## One using length at birth and gestational age as predictors (main effects only)
 ## One using head circumference, length, sex, and all interactions (including the three-way interaction) between these
 ```

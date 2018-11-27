@@ -77,6 +77,10 @@ modelr::add_predictions(mod_maternalfactors, lm_maternalfactors)
 mod_maternalfactors %>% 
   modelr::add_residuals(lm_maternalfactors) %>% 
   ggplot(aes(x = ppbmi + ppwt, y = resid)) + geom_violin()
+birthweight_data %>%
+  modelr::add_predictions(lm_maternalfactors) %>%
+  modelr::add_residuals(lm_maternalfactors) %>%
+  ggplot(aes(x = pred, y = resid)) + geom_point()
 ## One using length at birth and gestational age as predictors (main effects only)
 ## One using head circumference, length, sex, and all interactions (including the three-way interaction) between these
 
