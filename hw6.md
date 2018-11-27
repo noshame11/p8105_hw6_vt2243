@@ -8723,7 +8723,7 @@ Problem 1 - Homicide Data
     ## 4341 2268 19.24491  105 3022.434
     ## 4342 3232 23.43164  132 3127.635
 
-![](hw6_files/figure-markdown_github/unnamed-chunk-2-1.png)![](hw6_files/figure-markdown_github/unnamed-chunk-2-2.png)
+![](hw6_files/figure-markdown_github/maternal%20factors%20of%20bmi%20and%20weight-1.png)![](hw6_files/figure-markdown_github/maternal%20factors%20of%20bmi%20and%20weight-2.png)
 
 | term        |   estimate|  p.value|
 |:------------|----------:|--------:|
@@ -26118,4 +26118,4 @@ Problem 1 - Homicide Data
     ## 4341 2268    32      46       2 2564.79639
     ## 4342 3232    34      52       2 3385.76080
 
-![](hw6_files/figure-markdown_github/unnamed-chunk-2-3.png)
+![](hw6_files/figure-markdown_github/crossvalidation%20of%20models-1.png)

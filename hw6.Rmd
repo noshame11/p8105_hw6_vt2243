@@ -71,11 +71,15 @@ Problem 2 - Birthweight
 library(modelr) 
 library(mgcv)
 set.seed(12345)
+```
+```{r, uploading and cleaning, warning = FALSE, echo = FALSE}
 birthweight = read.csv(file = "./birthweight.csv")
 birthweight_data = 
   birthweight %>%
   mutate(babysex = as.factor(babysex), frace = as.factor(frace), malform = as.factor(malform), 
          mrace = as.factor(mrace))
+```
+```{r, maternal factors of bmi and weight, warning = FALSE, echo = FALSE}
 mod_maternalfactors = 
   birthweight_data %>%
   select(bwt, ppbmi, ppwt)
@@ -93,6 +97,8 @@ birthweight_data %>%
   modelr::add_predictions(lm_maternalfactors) %>%
   modelr::add_residuals(lm_maternalfactors) %>%
   ggplot(aes(x = pred, y = resid)) + geom_point()
+```
+```{r length and gestation age, warning = FALSE, echo = FALSE}
 mod_birthleng_gestweek = 
   birthweight_data %>%
   select(bwt, blength, gaweeks)
@@ -103,6 +109,8 @@ lm_birthleng_gestweek %>%
   knitr::kable(digits = 3)
 modelr::add_residuals(mod_birthleng_gestweek, lm_birthleng_gestweek)
 modelr::add_predictions(mod_birthleng_gestweek, lm_birthleng_gestweek)
+```
+```{r head circum length and sex, warning = FALSE, echo = FALSE}
 mod_headlengthsex = 
   birthweight_data %>%
   select(bwt, bhead, blength, babysex)
@@ -113,6 +121,8 @@ lm_headlengthsex %>%
   knitr::kable(digits = 3)
 modelr::add_residuals(mod_headlengthsex, lm_headlengthsex)
 modelr::add_predictions(mod_headlengthsex, lm_headlengthsex)
+```
+```{r crossvalidation of models, warning = FALSE, echo = FALSE}
 crossvalidate_birthdata = 
   crossv_mc(birthweight_data, 500) 
 crossvalidate_birthdata = 
