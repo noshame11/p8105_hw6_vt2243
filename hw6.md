@@ -3,6 +3,8 @@ Homework 6
 Vincent Tam
 November 25, 2018
 
+Problem 1 - Homicide Data
+
     ## -- Attaching packages ----------------------------- tidyverse 1.2.1 --
 
     ## v ggplot2 3.0.0     v purrr   0.2.5
@@ -14,12 +16,7 @@ November 25, 2018
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
-![](hw6_files/figure-markdown_github/setup-1.png) Problem 2
-
-``` r
-library(modelr) 
-library(mgcv)
-```
+![](hw6_files/figure-markdown_github/all%20cities%20homicides-1.png) Problem 2 - Birthweight
 
     ## Loading required package: nlme
 
@@ -32,32 +29,11 @@ library(mgcv)
 
     ## This is mgcv 1.8-25. For overview type 'help("mgcv-package")'.
 
-``` r
-set.seed(12345)
-birthweight = read.csv(file = "./birthweight.csv")
-birthweight_data = 
-  birthweight %>%
-  mutate(babysex = as.factor(babysex), frace = as.factor(frace), malform = as.factor(malform), 
-         mrace = as.factor(mrace))
-mod_maternalfactors = 
-  birthweight_data %>%
-  select(bwt, ppbmi, ppwt)
-lm_maternalfactors = lm(bwt ~ ppbmi + ppwt, mod_maternalfactors)
-lm_maternalfactors %>% 
-  broom::tidy() %>% 
-  select(term, estimate, p.value) %>% 
-  knitr::kable(digits = 3)
-```
-
 | term        |  estimate|  p.value|
 |:------------|---------:|--------:|
 | (Intercept) |  2722.294|        0|
 | ppbmi       |   -36.777|        0|
 | ppwt        |     9.599|        0|
-
-``` r
-modelr::add_residuals(mod_maternalfactors, lm_maternalfactors)
-```
 
     ##       bwt    ppbmi ppwt         resid
     ## 1    3629 26.27184  148   452.2324700
@@ -4403,10 +4379,6 @@ modelr::add_residuals(mod_maternalfactors, lm_maternalfactors)
     ## 4341 2268 19.24491  105  -754.4336187
     ## 4342 3232 23.43164  132   104.3648156
 
-``` r
-modelr::add_predictions(mod_maternalfactors, lm_maternalfactors)
-```
-
     ##       bwt    ppbmi ppwt     pred
     ## 1    3629 26.27184  148 3176.768
     ## 2    3062 21.34485  128 3165.985
@@ -8751,45 +8723,13 @@ modelr::add_predictions(mod_maternalfactors, lm_maternalfactors)
     ## 4341 2268 19.24491  105 3022.434
     ## 4342 3232 23.43164  132 3127.635
 
-``` r
-mod_maternalfactors %>% 
-  modelr::add_residuals(lm_maternalfactors) %>% 
-  ggplot(aes(x = ppbmi + ppwt, y = resid)) + geom_violin()
-```
-
-![](hw6_files/figure-markdown_github/unnamed-chunk-1-1.png)
-
-``` r
-birthweight_data %>%
-  modelr::add_predictions(lm_maternalfactors) %>%
-  modelr::add_residuals(lm_maternalfactors) %>%
-  ggplot(aes(x = pred, y = resid)) + geom_point()
-```
-
-![](hw6_files/figure-markdown_github/unnamed-chunk-1-2.png)
-
-``` r
-## One using length at birth and gestational age as predictors (main effects only)
-## One using head circumference, length, sex, and all interactions (including the three-way interaction) between these
-mod_birthleng_gestweek = 
-  birthweight_data %>%
-  select(bwt, blength, gaweeks)
-lm_birthleng_gestweek = lm(bwt ~ blength + gaweeks, mod_birthleng_gestweek)
-lm_birthleng_gestweek %>% 
-  broom::tidy() %>% 
-  select(term, estimate, p.value) %>% 
-  knitr::kable(digits = 3)
-```
+![](hw6_files/figure-markdown_github/unnamed-chunk-2-1.png)![](hw6_files/figure-markdown_github/unnamed-chunk-2-2.png)
 
 | term        |   estimate|  p.value|
 |:------------|----------:|--------:|
 | (Intercept) |  -4347.667|        0|
 | blength     |    128.556|        0|
 | gaweeks     |     27.047|        0|
-
-``` r
-modelr::add_residuals(mod_birthleng_gestweek, lm_birthleng_gestweek)
-```
 
     ##       bwt blength gaweeks         resid
     ## 1    3629      51    39.9   341.1621531
@@ -13135,10 +13075,6 @@ modelr::add_residuals(mod_birthleng_gestweek, lm_birthleng_gestweek)
     ## 4341 2268      46    39.0  -352.7172931
     ## 4342 3232      52    40.6  -203.3261680
 
-``` r
-modelr::add_predictions(mod_birthleng_gestweek, lm_birthleng_gestweek)
-```
-
     ##       bwt blength gaweeks      pred
     ## 1    3629      51    39.9 3287.8378
     ## 2    3062      48    25.9 2523.5165
@@ -17483,17 +17419,6 @@ modelr::add_predictions(mod_birthleng_gestweek, lm_birthleng_gestweek)
     ## 4341 2268      46    39.0 2620.7173
     ## 4342 3232      52    40.6 3435.3262
 
-``` r
-mod_headlengthsex = 
-  birthweight_data %>%
-  select(bwt, bhead, blength, babysex)
-lm_headlengthsex = lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead*babysex + blength*babysex + bhead*blength*babysex, mod_headlengthsex)
-lm_headlengthsex %>% 
-  broom::tidy() %>% 
-  select(term, estimate, p.value) %>% 
-  knitr::kable(digits = 3)
-```
-
 | term                   |   estimate|  p.value|
 |:-----------------------|----------:|--------:|
 | (Intercept)            |  -7176.817|    0.000|
@@ -17504,10 +17429,6 @@ lm_headlengthsex %>%
 | bhead:babysex2         |   -198.393|    0.000|
 | blength:babysex2       |   -123.773|    0.000|
 | bhead:blength:babysex2 |      3.878|    0.000|
-
-``` r
-modelr::add_residuals(mod_headlengthsex, lm_headlengthsex)
-```
 
     ##       bwt bhead blength babysex         resid
     ## 1    3629    34      51       2  3.346243e+02
@@ -21853,10 +21774,6 @@ modelr::add_residuals(mod_headlengthsex, lm_headlengthsex)
     ## 4341 2268    32      46       2 -2.967964e+02
     ## 4342 3232    34      52       2 -1.537608e+02
 
-``` r
-modelr::add_predictions(mod_headlengthsex, lm_headlengthsex)
-```
-
     ##       bwt bhead blength babysex       pred
     ## 1    3629    34      51       2 3294.37569
     ## 2    3062    34      48       1 3002.83606
@@ -26201,23 +26118,4 @@ modelr::add_predictions(mod_headlengthsex, lm_headlengthsex)
     ## 4341 2268    32      46       2 2564.79639
     ## 4342 3232    34      52       2 3385.76080
 
-``` r
-crossvalidate_birthdata = 
-  crossv_mc(birthweight_data, 500) 
-crossvalidate_birthdata = 
-  crossvalidate_birthdata %>% 
-  mutate(mod_maternalfactors = map(train, ~lm(bwt ~ ppbmi + ppwt, data = .x)),
-         mod_birthleng_gestweek = map(train, ~lm(bwt ~ blength + gaweeks, data = .x)),
-         mod_headlengthsex = map(train, ~lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead*babysex + blength*babysex + bhead*blength*babysex, data = .x))) %>% 
-  mutate(rmse_maternalfactors = map2_dbl(mod_maternalfactors, test, ~rmse(model = .x, data = .y)),
-         rmse_birthleng_gestweek = map2_dbl(mod_birthleng_gestweek, test, ~rmse(model = .x, data = .y)),
-         rmse_headlengthsex = map2_dbl(mod_headlengthsex, test, ~rmse(model = .x, data = .y)))
-crossvalidate_birthdata %>% 
-  select(starts_with("rmse")) %>% 
-  gather(key = model, value = rmse) %>% 
-  mutate(model = str_replace(model, "rmse_", ""),
-         model = fct_inorder(model)) %>% 
-  ggplot(aes(x = model, y = rmse)) + geom_violin()
-```
-
-![](hw6_files/figure-markdown_github/unnamed-chunk-1-3.png)
+![](hw6_files/figure-markdown_github/unnamed-chunk-2-3.png)
