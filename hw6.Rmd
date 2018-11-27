@@ -10,6 +10,7 @@ library(tidyverse)
 library(janitor)
 library(dplyr)
 library(purrr)
+set.seed(12345)
 hom_data <- read.csv(file = "./homicide-data.csv") 
 hom_data = 
   hom_data %>%
