@@ -58,9 +58,10 @@ cities_glinmodel =
   mutate(conf.low = exp(estimate - (1.96 * std.error)), conf.high = exp(estimate + (1.96 * std.error))) 
 cities_plot =
   cities_glinmodel %>% 
-  ggplot(aes(fct_reorder(city_state, OR), OR)) +
-  geom_point() +
+  mutate(city_state = reorder(city_state, OR)) %>%
+  ggplot(aes(x = city_state, y = OR)) +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
+  geom_point() +
   labs(
     title = "Estimates and CIs for All Cities",
     x = "City",
