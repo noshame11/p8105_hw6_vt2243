@@ -42,18 +42,19 @@ cities_glinmodel =
   mutate(glinmodel_ci = map(glinmodel, ~broom::confint_tidy(.))) %>%
   select(city_state, glinmodel_tidy, glinmodel_ci) %>% 
   unnest() %>% 
-  mutate(OR = exp(estimate)) %>%
-  mutate(conf.low = exp(estimate - (1.96 * std.error)), conf.high = exp(estimate + (1.96 * std.error))) 
+  mutate(OR = exp(estimate), OR.conf.low = exp(conf.low), OR.conf.high = exp(conf.high)) %>%
+  select(city_state, term, log_OR = estimate, OR, p.value, OR.conf.low, OR.conf.high) %>% 
+  filter(term == "victim_raceNon_white")
 cities_plot =
   cities_glinmodel %>% 
-  mutate(city_state = reorder(city_state, OR)) %>%
+  mutate(city_state = reorder(city_state, OR), OR) %>%
   ggplot(aes(x = city_state, y = OR)) +
-  geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
+  geom_errorbar(aes(ymin = OR.conf.low, ymax = OR.conf.high)) +
   geom_point() +
   labs(
-    title = "Estimates and CIs for All Cities",
+    title = "Estimate OR and CIs for All Cities",
     x = "City",
-    y = "Estimates"
+    y = "OR Estimates"
   )  +
   theme(axis.text.x = element_text(angle = 90))
 cities_plot
