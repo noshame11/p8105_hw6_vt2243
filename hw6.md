@@ -3,10 +3,6 @@ Homework 6
 Vincent Tam
 November 25, 2018
 
-``` r
-library(tidyverse)
-```
-
     ## -- Attaching packages ----------------------------- tidyverse 1.2.1 --
 
     ## v ggplot2 3.0.0     v purrr   0.2.5
@@ -18,62 +14,7 @@ library(tidyverse)
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
-``` r
-library(janitor)
-library(dplyr)
-library(purrr)
-set.seed(12345)
-hom_data <- read.csv(file = "./homicide-data.csv") 
-hom_data = 
-  hom_data %>%
-  mutate(city_state = str_c(city, ",", state)) %>%
-  filter(city_state != "Dallas,TX", city_state != "Phoenix,AZ", city_state != "Kansas City,MO", city_state != "Tulsa,AL") %>% 
-  filter(victim_sex != "Unknown") %>%
-  mutate(victim_sex = as.factor(victim_sex)) %>%
-  mutate(victim_race = recode(victim_race, 'White' = "White", 'Hispanic' = "Non_white", 'Other' = "Non_white", 'Black' = "Non_white", 'Asian' = "Non_white", 'Unknown' = "Non_white")) %>% 
-  mutate(solved = as.numeric(disposition == "Closed by arrest"),
-         victim_age = as.numeric(victim_age),
-         victim_race = fct_relevel(victim_race, "White", "Non_white")) %>% 
-  mutate(victim_age = as.numeric(victim_age)) 
-baltimore_data = 
-  hom_data %>%
-  filter(city_state == "Baltimore,MD")
-baltimore_fit = 
-  baltimore_data %>% 
-  glm(solved ~ victim_age + victim_race + victim_sex, data = ., family = binomial()) %>% 
-  broom::tidy() %>% 
-  mutate(OR = boot::inv.logit(estimate)) %>%
-  select(term, log_OR = estimate, OR, p.value) %>% 
-  knitr::kable(digits = 3)
-cities_glinmodel = 
-  hom_data %>% 
-  group_by(city_state) %>%
-  select(city_state, solved, victim_age, victim_race, victim_sex) %>%
-  nest() %>% 
-  mutate(glinmodel = map(data, ~glm(solved ~ victim_age + victim_race + victim_sex, data = ., family = binomial()))) %>%
-  mutate(glinmodel_tidy = map(glinmodel, ~broom::tidy(.))) %>%
-  mutate(glinmodel_ci = map(glinmodel, ~broom::confint_tidy(.))) %>%
-  select(city_state, glinmodel_tidy, glinmodel_ci) %>% 
-  unnest() %>% 
-  mutate(OR = exp(estimate), OR.conf.low = exp(conf.low), OR.conf.high = exp(conf.high)) %>%
-  select(city_state, term, log_OR = estimate, OR, p.value, OR.conf.low, OR.conf.high) %>% 
-  filter(term == "victim_raceNon_white")
-cities_plot =
-  cities_glinmodel %>% 
-  mutate(city_state = reorder(city_state, OR), OR) %>%
-  ggplot(aes(x = city_state, y = OR)) +
-  geom_errorbar(aes(ymin = OR.conf.low, ymax = OR.conf.high)) +
-  geom_point() +
-  labs(
-    title = "Estimate OR and CIs for All Cities",
-    x = "City",
-    y = "OR Estimates"
-  )  +
-  theme(axis.text.x = element_text(angle = 90))
-cities_plot
-```
-
-![](hw6_files/figure-markdown_github/setup-1.png) \#\#\# Problem 2
+![](hw6_files/figure-markdown_github/setup-1.png) Problem 2
 
 ``` r
 library(modelr) 

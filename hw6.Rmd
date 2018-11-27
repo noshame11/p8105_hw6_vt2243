@@ -4,13 +4,15 @@ author: "Vincent Tam"
 date: "November 25, 2018"
 output: github_document
 ---
-
-```{r setup}
+Problem 1 - Homicide Data
+```{r, warning = FALSE, echo = FALSE}
 library(tidyverse)
 library(janitor)
 library(dplyr)
 library(purrr)
 set.seed(12345)
+```
+```{r upload and clean data, warning = FALSE, echo = FALSE}
 hom_data <- read.csv(file = "./homicide-data.csv") 
 hom_data = 
   hom_data %>%
@@ -23,6 +25,8 @@ hom_data =
          victim_age = as.numeric(victim_age),
          victim_race = fct_relevel(victim_race, "White", "Non_white")) %>% 
   mutate(victim_age = as.numeric(victim_age)) 
+```
+```{r Baltimore homicides, warning = FALSE, echo = FALSE}
 baltimore_data = 
   hom_data %>%
   filter(city_state == "Baltimore,MD")
@@ -33,6 +37,8 @@ baltimore_fit =
   mutate(OR = boot::inv.logit(estimate)) %>%
   select(term, log_OR = estimate, OR, p.value) %>% 
   knitr::kable(digits = 3)
+```
+```{r all cities homicides, warning = FALSE, echo = FALSE}
 cities_glinmodel = 
   hom_data %>% 
   group_by(city_state) %>%
@@ -60,8 +66,8 @@ cities_plot =
   theme(axis.text.x = element_text(angle = 90))
 cities_plot
 ```
-### Problem 2
-```{r}
+Problem 2 - Birthweight
+```{r, warning = FALSE, echo = FALSE}
 library(modelr) 
 library(mgcv)
 set.seed(12345)
@@ -77,8 +83,8 @@ lm_maternalfactors = lm(bwt ~ ppbmi + ppwt, mod_maternalfactors)
 lm_maternalfactors %>% 
   broom::tidy() %>% 
   select(term, estimate, p.value) %>% 
-  knitr::kable(digits = 3)
-modelr::add_residuals(mod_maternalfactors, lm_maternalfactors)
+  knitr::kable(digits = 3) 
+modelr::add_residuals(mod_maternalfactors, lm_maternalfactors) %>%
 modelr::add_predictions(mod_maternalfactors, lm_maternalfactors)
 mod_maternalfactors %>% 
   modelr::add_residuals(lm_maternalfactors) %>% 
@@ -87,8 +93,6 @@ birthweight_data %>%
   modelr::add_predictions(lm_maternalfactors) %>%
   modelr::add_residuals(lm_maternalfactors) %>%
   ggplot(aes(x = pred, y = resid)) + geom_point()
-## One using length at birth and gestational age as predictors (main effects only)
-## One using head circumference, length, sex, and all interactions (including the three-way interaction) between these
 mod_birthleng_gestweek = 
   birthweight_data %>%
   select(bwt, blength, gaweeks)
