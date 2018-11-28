@@ -43,7 +43,8 @@ baltimore_fit =
 baltimore_fit
 ```
   
-The estimated odds ratio comparing homicides "Closed by Arrest" between non-White victims and White victims is 0.312. This means that homicides of non-White victims are 3x less likely to be closed by arrest. 
+The estimated odds ratio comparing homicides "Closed by Arrest" between non-White victims and White victims is 0.312. This means that homicides of non-White victims are 3x less likely to be closed by arrest.   
+
 ```{r all cities homicides, warning = FALSE, echo = FALSE}
 cities_glinmodel = 
   hom_data %>% 
@@ -72,7 +73,8 @@ cities_plot =
   theme(axis.text.x = element_text(angle = 90))
 cities_plot
 ```
-In a plot of a series of American cities, 
+In a plot of a series of American cities, Boston, MA has the lowest OR estimates while Tampa, FL has the highest OR of ending homicides in arrest for nonwhite victims.
+
 ## Problem 2 - Birthweight
 ```{r, warning = FALSE, echo = FALSE}
 library(modelr) 
@@ -95,7 +97,6 @@ lm_maternalfactors %>%
   broom::tidy() %>% 
   select(term, estimate, p.value) %>% 
   knitr::kable(digits = 3)
-mod_maternalfactors
 mod_maternalfactors %>%
   head() %>%
   modelr::add_residuals(lm_maternalfactors) %>%
@@ -108,6 +109,7 @@ birthweight_data %>%
   modelr::add_residuals(lm_maternalfactors) %>%
   ggplot(aes(x = pred, y = resid)) + geom_point()
 ```
+The modeling process here chose maternal bmi and pre-pregnancy weight in pounds. It is theorized that maternal physical condition can influence the neonate's birthweight. 
 ```{r length and gestation age, warning = FALSE, echo = FALSE}
 mod_birthleng_gestweek = 
   birthweight_data %>%
@@ -117,7 +119,6 @@ lm_birthleng_gestweek %>%
   broom::tidy() %>% 
   select(term, estimate, p.value) %>% 
   knitr::kable(digits = 3)
-mod_birthleng_gestweek
 mod_birthleng_gestweek %>%
   head() %>%
   modelr::add_residuals(lm_birthleng_gestweek) %>%
@@ -132,7 +133,6 @@ lm_headlengthsex %>%
   broom::tidy() %>% 
   select(term, estimate, p.value) %>% 
   knitr::kable(digits = 3)
-mod_headlengthsex
 mod_headlengthsex %>%
   head() %>%
   modelr::add_residuals(lm_headlengthsex) %>%
