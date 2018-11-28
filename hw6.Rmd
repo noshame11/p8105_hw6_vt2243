@@ -34,11 +34,16 @@ baltimore_fit =
   baltimore_data %>% 
   glm(solved ~ victim_age + victim_race + victim_sex, data = ., family = binomial()) %>% 
   broom::tidy() %>% 
-  mutate(OR = boot::inv.logit(estimate)) %>%
-  select(term, log_OR = estimate, OR, p.value) %>% 
+  mutate(OR = exp(estimate)) %>%
+  mutate(conf.low = exp(estimate - (1.96 * std.error)), 
+         conf.high = exp(estimate + (1.96 * std.error))) %>%
+  select(term, log_OR = estimate, OR, conf.low, conf.high) %>% 
+  filter(term == "victim_raceNon_white") %>%
   knitr::kable(digits = 3)
 baltimore_fit
 ```
+  
+The estimated odds ratio comparing homicides "Closed by Arrest" between non-White victims and White victims is 0.312. This means that homicides of non-White victims are 3x less likely to be closed by arrest. 
 ```{r all cities homicides, warning = FALSE, echo = FALSE}
 cities_glinmodel = 
   hom_data %>% 
@@ -67,7 +72,7 @@ cities_plot =
   theme(axis.text.x = element_text(angle = 90))
 cities_plot
 ```
-
+In a plot of a series of American cities, 
 ## Problem 2 - Birthweight
 ```{r, warning = FALSE, echo = FALSE}
 library(modelr) 

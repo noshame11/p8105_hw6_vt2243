@@ -17,16 +17,11 @@ Problem 1 - Homicide Data
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
-| term                      |     log\_OR|        OR|                  p.value|
-|:--------------------------|-----------:|---------:|------------------------:|
-| (Intercept)               |       1.047|     0.740|                    0.000|
-| victim\_age               |      -0.004|     0.499|                    0.217|
-| victim\_raceNon\_white    |      -0.793|     0.312|                    0.000|
-| victim\_sexMale           |      -0.885|     0.292|                    0.000|
-| \[\](hw6\_files/figure-ma |  rkdown\_gi|  thub/all|  cities homicides-1.png)|
+| term                   |  log\_OR|     OR|  conf.low|  conf.high|
+|:-----------------------|--------:|------:|---------:|----------:|
+| victim\_raceNon\_white |   -0.793|  0.453|     0.322|      0.637|
 
-Problem 2 - Birthweight
------------------------
+The estimated odds ratio comparing homicides "Closed by Arrest" between non-White victims and White victims is 0.312. This means that homicides of non-White victims are 3x less likely to be closed by arrest. ![](hw6_files/figure-markdown_github/all%20cities%20homicides-1.png) In a plot of a series of American cities, \#\# Problem 2 - Birthweight
 
     ## Loading required package: nlme
 
