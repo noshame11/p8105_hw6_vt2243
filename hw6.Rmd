@@ -73,6 +73,7 @@ cities_plot =
   theme(axis.text.x = element_text(angle = 90))
 cities_plot
 ```
+    
 In a plot of a series of American cities, Boston, MA has the lowest OR estimates while Tampa, FL has the highest OR of ending homicides in arrest for nonwhite victims.
 
 ## Problem 2 - Birthweight
@@ -109,7 +110,9 @@ birthweight_data %>%
   modelr::add_residuals(lm_maternalfactors) %>%
   ggplot(aes(x = pred, y = resid)) + geom_point()
 ```
-The modeling process here chose maternal bmi and pre-pregnancy weight in pounds. It is theorized that maternal physical condition can influence the neonate's birthweight. 
+  
+The modeling process here chose maternal bmi and pre-pregnancy weight in pounds. It is theorized that maternal physical condition can influence the neonate's birthweight. By plugging in maternal bmi and pre-pregnancy weight, a model can be derived to predict neonate birthweight. The violin plot shows that the majority of the residuals are around 0 when accounting for maternal bmi and pre-pregnancy weight. This may indicate a useful model. The scatterplot also may be a good model. Values are clustered at 0 for residuals and around 3100 for predictions.
+
 ```{r length and gestation age, warning = FALSE, echo = FALSE}
 mod_birthleng_gestweek = 
   birthweight_data %>%
@@ -155,5 +158,8 @@ crossvalidate_birthdata %>%
   mutate(model = str_replace(model, "rmse_", ""),
          model = fct_inorder(model)) %>% 
   ggplot(aes(x = model, y = rmse)) + geom_violin()
+rmse(lm_maternalfactors, birthweight_data)
+rmse(lm_birthleng_gestweek, birthweight_data)
+rmse(lm_headlengthsex, birthweight_data)
 ```
 

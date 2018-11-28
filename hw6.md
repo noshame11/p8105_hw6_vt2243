@@ -23,7 +23,9 @@ Problem 1 - Homicide Data
 
 The estimated odds ratio comparing homicides "Closed by Arrest" between non-White victims and White victims is 0.312. This means that homicides of non-White victims are 3x less likely to be closed by arrest.
 
-![](hw6_files/figure-markdown_github/all%20cities%20homicides-1.png) In a plot of a series of American cities, Boston, MA has the lowest OR estimates while Tampa, FL has the highest OR of ending homicides in arrest for nonwhite victims.
+![](hw6_files/figure-markdown_github/all%20cities%20homicides-1.png)
+
+In a plot of a series of American cities, Boston, MA has the lowest OR estimates while Tampa, FL has the highest OR of ending homicides in arrest for nonwhite victims.
 
 Problem 2 - Birthweight
 -----------------------
@@ -53,7 +55,9 @@ Problem 2 - Birthweight
     ## 5 3374 21.02642  130  177.10566 3196.894
     ## 6 3374 18.60030  115  231.86726 3142.133
 
-![](hw6_files/figure-markdown_github/maternal%20factors%20bmi%20and%20wt-1.png)![](hw6_files/figure-markdown_github/maternal%20factors%20bmi%20and%20wt-2.png) The modeling process here chose maternal bmi and pre-pregnancy weight in pounds. It is theorized that maternal physical condition can influence the neonate's birthweight.
+![](hw6_files/figure-markdown_github/maternal%20factors%20bmi%20and%20wt-1.png)![](hw6_files/figure-markdown_github/maternal%20factors%20bmi%20and%20wt-2.png)
+
+The modeling process here chose maternal bmi and pre-pregnancy weight in pounds. It is theorized that maternal physical condition can influence the neonate's birthweight. By plugging in maternal bmi and pre-pregnancy weight, a model can be derived to predict neonate birthweight. The violin plot shows that the majority of the residuals are around 0 when accounting for maternal bmi and pre-pregnancy weight. This may indicate a useful model. The scatterplot also may be a good model. Values are clustered at 0 for residuals and around 3100 for predictions.
 
 | term        |   estimate|  p.value|
 |:------------|----------:|--------:|
@@ -89,3 +93,9 @@ Problem 2 - Birthweight
     ## 6 3374    33      52       1  190.95508 3183.045
 
 ![](hw6_files/figure-markdown_github/crossvalidation%20of%20models-1.png)
+
+    ## [1] 499.7471
+
+    ## [1] 333.1023
+
+    ## [1] 287.4692
